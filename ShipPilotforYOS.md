@@ -1,8 +1,6 @@
-```mermaid
 ---
 config:
   layout: dagre
-  theme: redux
   look: handDrawn
 ---
 flowchart TB
@@ -20,8 +18,8 @@ flowchart TB
   end
  subgraph WebhookSystem[" "]
     direction TB
-        WH2["タスク状態自動更新<br>Updates Task Status"]
-        WH1["送り状番号自動取得<br>Webhook Gets Tracking Number"]
+        WH2["タスク状態を自動更新<br>Updates Task Status"]
+        WH1["送り状番号自動取得<br>Gets Tracking Number"]
   end
  subgraph CorrectionLoop["修正ループ / Correction Loop"]
     direction LR
@@ -36,6 +34,7 @@ flowchart TB
         P["送り状番号入力<br>Record Shipping Label"]
         Q["検査スキップ<br>Skip Inspection"]
         SL["封緘・伝票貼付<br>Final Seal &amp; Labeling"]
+        E3["Exception<br>例外状態"]
   end
  subgraph InspectorZone["🔎 Inspector 作業ゾーン / Inspector Zone"]
     direction TB
@@ -44,15 +43,13 @@ flowchart TB
         H("検査開始<br>Start Inspection")
         K(["出荷完了<br>Completed"])
         CorrectionLoop
-        IE1["🚨 Inspector: Exception処理<br>Inspector Exception Handling"]
         IC1["🛑 Inspector: タスク中止<br>Inspector Task Cancellation"]
   end
  subgraph ExceptionHandling["🚨 例外処理<br>Exception Handling"]
     direction TB
-        E3["修正不可<br>Unfixable"]
-        T["Inspector: 例外処理<br>Exception Process"]
+        T["Exception解決処理<br>Exception Resolution"]
         U["タスクプールに戻す<br>Return to Pending"]
-        Cancelled["Cancelled<br>キャンセル済み"]
+        note1["📝 詳細記録<br>Detailed Logging<br>・担当者 / Operator<br>・理由 / Reason<br>・時刻 / Timestamp<br>・操作履歴 / Action History"]
   end
     A --> B
     B --> C & PE1 & PC1
@@ -61,12 +58,12 @@ flowchart TB
     F --> F1 & PE1 & PC1
     F1 --> F2
     WH1 --> WH2
-    H --> I & IE1 & IC1
-    I --> J & IE1 & IC1
+    H --> I
+    I --> J & IC1
     J -- ✅ 合格 / Pass --> SL
     SL --> K & IC1
     J -- ❌ 修正必要<br>Needs Correction --> L
-    L --> M & IE1 & IC1
+    L --> M & IC1
     M -- ピッキングエラー<br>Picking Error --> N
     M -- 梱包エラー<br>Packing Error --> O_decision
     O_decision -- あり / Yes --> O_void
@@ -78,9 +75,9 @@ flowchart TB
     P --> Q
     Q --> SL
     M -- 修正不可<br>Unfixable --> E3
-    E3 --> T
-    T -- 問題解決 / Resolved --> U
-    T -- キャンセル / Cancel --> Cancelled
+    E3 --> note1
+    note1 --> T
+    T --> U
     U --> B
     F2 --> WH1
     WH2 --> G
@@ -88,12 +85,10 @@ flowchart TB
     F2 -.-> V["🔓 Packer 次の作業へ<br>Packer Free to Start Next Task"]
     PE1 --> E3
     PE1 -.-> V
-    PC1 --> Cancelled
+    PC1 --> Cancelled["Cancelled"]
     PC1 -.-> V
-    IE1 --> E3
-    IE1 -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"]
     IC1 --> Cancelled
-    IC1 -.-> V3
+    IC1 -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"]
      B:::pending
      C:::process
      D:::picked
@@ -115,17 +110,17 @@ flowchart TB
      P:::barcode
      Q:::correction
      SL:::process
+     E3:::except
      G:::packed
      I:::process
      H:::process
      K:::completed
-     IE1:::except
      IC1:::cancelled
-     E3:::except
      T:::process
      U:::pending
-     Cancelled:::cancelled
+     note1:::note
      V:::unlock
+     Cancelled:::cancelled
      V3:::unlock
     classDef pending fill:#fff2cc,stroke:#d6b656,stroke-width:2px
     classDef picked fill:#d5e8d4,stroke:#82b666,stroke-width:2px
@@ -139,5 +134,5 @@ flowchart TB
     classDef barcode fill:#e6ffe6,stroke:#009900,stroke-width:2px
     classDef webhook fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef cancelled fill:#e9ecef,stroke:#6c757d,stroke-width:2px
+    classDef note fill:#e6f3ff,stroke:#0066cc,stroke-width:1px,stroke-dasharray: 3 3
     style WebhookSystem stroke:none,fill:transparent
-```
