@@ -35,7 +35,7 @@ flowchart TB
         P["送り状番号入力<br>Record Shipping Label"]
         Q["検査スキップ<br>Skip Inspection"]
         SL["封緘・伝票貼付<br>Final Seal &amp; Labeling"]
-        E3["Exception<br>例外状態"]
+        E3["例外状態<br>Exception"]
   end
  subgraph InspectorZone["🔎 Inspector 作業ゾーン / Inspector Zone"]
     direction TB
