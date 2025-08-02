@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShipPilot - インタラクティブ製品概要</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutral Harmony -->
+    <!-- Application Structure Plan: A single-page, vertically scrolling interactive narrative. The structure starts with the problem, introduces the ShipPilot solution, provides an interactive simulation of the core features (Packer/Inspector dashboards), visualizes the benefits with a conceptual chart, and concludes with key innovations. This story-driven approach is chosen over a simple dashboard to guide the user through the system's value proposition, making the conceptual information more engaging and understandable than a direct translation of the report's sections. -->
+    <!-- Visualization & Content Choices: 
+    - Current Problems -> HTML/CSS icon cards to visually contrast "before" and "after". Goal: Inform.
+    - Core Features -> Tabbed component and a CSS-based flow diagram. Goal: Organize & Explain. Interaction: Clicks reveal details.
+    - Expected Outcomes -> Chart.js bar chart with illustrative data to quantify benefits. Goal: Compare & Persuade.
+    - Security/RBAC -> Simple HTML table for clarity. Goal: Inform.
+    - This approach uses interactive HTML/CSS for diagrams and layouts, and Chart.js for the single data visualization, strictly avoiding SVG and Mermaid JS as required. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #F5F5F4; /* Tailwind stone-100 */
+            color: #44403C; /* Tailwind stone-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-button.active {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+        }
+        .flow-step {
+            transition: all 0.3s ease;
+        }
+        .flow-step:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+
+        <!-- Header Section -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-4">ShipPilot</h1>
+            <p class="text-lg md:text-xl text-stone-600">倉庫業務を、デジタル化された高精度なオペレーションへ。</p>
+        </header>
+
+        <!-- 1. Problem Section -->
+        <section id="problem" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">現状の課題：見えない、防げない、標準化できない</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-xl mb-4 text-red-600">従来のアナログなワークフロー</h3>
+                    <ul class="space-y-3 list-disc list-inside text-stone-600">
+                        <li><span class="font-bold">紙への依存:</span> 注文書印刷と手動でのチェックリスト管理</li>
+                        <li><span class="font-bold">物理的な非効率:</span> プリンターと倉庫間の移動ロス</li>
+                        <li><span class="font-bold">ブラックボックス化:</span> リアルタイムでの進捗把握が不可能</li>
+                        <li><span class="font-bold">属人化:</span> 品質の維持が個人の経験と注意力に依存</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-xl mb-4 text-green-600">ShipPilotがもたらす変革</h3>
+                    <ul class="space-y-3 list-disc list-inside text-stone-600">
+                        <li><span class="font-bold">デジタル化:</span> インタラクティブな電子リストによる検証</li>
+                        <li><span class="font-bold">効率化:</span> 倉庫内で完結するペーパーレスな作業フロー</li>
+                        <li><span class="font-bold">完全な可視化:</span> 全工程の進捗をリアルタイムでデータ化</li>
+                        <li><span class="font-bold">標準化:</span> システムが作業手順をガイドし、品質を均一化</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Solution Section -->
+        <section id="solution" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">ShipPilotのコア設計原則</h2>
+             <p class="text-center max-w-3xl mx-auto mb-12 text-stone-600">ShipPilotは、単なるツールではありません。エラーを撲滅し、業務を可視化・標準化するための、倉庫業務の神経網です。以下の4つの原則に基づき、堅牢なオペレーション基盤を構築します。</p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="text-4xl mb-4">1️⃣</div>
+                    <h3 class="font-bold text-lg mb-2">シングルピースフローの強化</h3>
+                    <p class="text-sm text-stone-600">「一度に一つの注文」をシステムが強制。注文間の混同リスクを物理的に排除します。</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="text-4xl mb-4">2️⃣</div>
+                    <h3 class="font-bold text-lg mb-2">デジタル検証</h3>
+                    <p class="text-sm text-stone-600">全項目のチェックが完了するまで次の工程に進めない、強制的なデジタルゲートを設けます。</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="text-4xl mb-4">3️⃣</div>
+                    <h3 class="font-bold text-lg mb-2">プロセスの完全可視化</h3>
+                    <p class="text-sm text-stone-600">全作業の進捗をリアルタイムでデータ化。管理者はいつでも現場の状況を正確に把握できます。</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="text-4xl mb-4">4️⃣</div>
+                    <h3 class="font-bold text-lg mb-2">UIの簡素化</h3>
+                    <p class="text-sm text-stone-600">倉庫スタッフを複雑なShopifyバックエンドから解放し、出荷業務に特化した専用ツールを提供します。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Features Section -->
+        <section id="features" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">主要機能：役割ベースのダッシュボード</h2>
+            <p class="text-center max-w-3xl mx-auto mb-12 text-stone-600">ShipPilotは、Packer（梱包員）とInspector（検品員）という明確な役割に基づいたインターフェースを提供します。これにより、各担当者は自身のタスクに集中でき、ワークフロー全体がスムーズに流れます。</p>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex justify-center border-b mb-6">
+                    <button id="packer-tab-btn" class="tab-button active py-2 px-6 font-bold rounded-t-lg transition-colors duration-300">Packer ダッシュボード</button>
+                    <button id="inspector-tab-btn" class="tab-button py-2 px-6 font-bold rounded-t-lg transition-colors duration-300">Inspector ダッシュボード</button>
+                </div>
+
+                <div id="packer-content">
+                    <h3 class="font-bold text-xl mb-4 text-center">Packer: ピッキングから梱包まで</h3>
+                    <div class="flex flex-col items-center space-y-2 text-sm">
+                        <div class="flow-step bg-stone-100 p-3 rounded-lg w-full max-w-md text-center shadow-sm">B: ピッキング待ち (Pending)</div>
+                        <div class="text-2xl text-stone-400">↓</div>
+                        <div class="flow-step bg-green-100 p-3 rounded-lg w-full max-w-md text-center shadow-sm">D: ピッキング完了 (Picked)</div>
+                        <div class="text-2xl text-stone-400">↓</div>
+                        <div class="flow-step bg-blue-100 p-3 rounded-lg w-full max-w-md text-center shadow-sm">G: 梱包・伝票発行完了 (Packed)</div>
+                    </div>
+                    <ul class="mt-6 text-sm space-y-2 list-disc list-inside max-w-md mx-auto text-stone-600">
+                        <li><strong>タスクのクレーム＆ロック:</strong> 待機中のタスクリストから、処理したい注文を柔軟に選択して開始。</li>
+                        <li><strong>デジタルピッキング:</strong> iPadの画面上で、商品ごとにチェックを入れないと完了できない仕組み。</li>
+                        <li><strong>初回顧客への対応:</strong> 初めてのお客様には、販促物をリストに自動で追加表示。</li>
+                        <li><strong>Webhook駆動の自動化:</strong> 配送ラベルを作成すると、Webhookが作動し、ステータスが自動で進行。</li>
+                    </ul>
+                </div>
+
+                <div id="inspector-content" class="hidden">
+                    <h3 class="font-bold text-xl mb-4 text-center">Inspector: 品質保証の最終砦</h3>
+                    <div class="flex flex-col items-center space-y-2 text-sm">
+                        <div class="flow-step bg-blue-100 p-3 rounded-lg w-full max-w-md text-center shadow-sm">G: 梱包・伝票発行完了 (Packed)</div>
+                        <div class="text-2xl text-stone-400">↓</div>
+                        <div class="flow-step bg-purple-100 p-3 rounded-lg w-full max-w-md text-center shadow-sm">I: 検査中 (Inspecting)</div>
+                        <div class="text-2xl text-stone-400">↓</div>
+                        <div class="flow-step bg-teal-100 p-3 rounded-lg w-full max-w-md text-center shadow-sm">K: 出荷完了 (Completed)</div>
+                    </div>
+                     <ul class="mt-6 text-sm space-y-2 list-disc list-inside max-w-md mx-auto text-stone-600">
+                        <li><strong>検査キュー管理:</strong> 梱包済みのタスクを一覧で確認し、優先順位をつけて検査を開始。</li>
+                        <li><strong>インテリジェントな修正フロー:</strong> ピッキングエラーか梱包エラーかを判断し、最適な修正プロセスに誘導。</li>
+                        <li><strong>緊急Packerモード:</strong> 修正が必要な場合、Inspectorが一時的にPackerの権限を持ち、迅速に問題を解決。</li>
+                        <li><strong>例外処理:</strong> 現場で解決できない問題は「例外キュー」に送り、管理者が集中して対応。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Benefits Section -->
+        <section id="benefits" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-10">期待される成果：エラー撲滅と効率化</h2>
+            <p class="text-center max-w-3xl mx-auto mb-12 text-stone-600">ShipPilotの導入は、単なる作業改善にとどまりません。ヒューマンエラーをシステムで防止し、業務をデータ化することで、顧客満足度の向上と事業成長の基盤を同時に実現します。</p>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="font-bold text-xl mb-6 text-center">出荷エラー率の劇的な改善（概念図）</h3>
+                <div class="chart-container">
+                    <canvas id="errorRateChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Innovations Section -->
+        <section id="innovations" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10">ShipPilotの革新性</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-lg mb-3">セキュリティと権限管理</h3>
+                    <ul class="text-sm space-y-2 text-stone-600">
+                        <li><strong>マルチテナント設計:</strong> 企業ごとにデータを完全に分離し、高いセキュリティを確保。</li>
+                        <li><strong>役割ベースアクセス制御 (RBAC):</strong> Packer, Inspector, Adminなど、役割に応じた操作権限を柔軟に設定可能。</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="font-bold text-lg mb-3">運用継続性の確保</h3>
+                     <ul class="text-sm space-y-2 text-stone-600">
+                        <li><strong>完全なオフライン対応:</strong> PWA技術により、ネットワークが不安定な倉庫内でも安定した操作を提供。</li>
+                        <li><strong>デッドロック防止:</strong> 一つの問題タスクが原因で、全体のワークフローが停止することを防ぐ設計。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center text-sm text-stone-500 mt-12">
+            <p>&copy; 2025 ShipPilot. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab functionality
+        const packerTabBtn = document.getElementById('packer-tab-btn');
+        const inspectorTabBtn = document.getElementById('inspector-tab-btn');
+        const packerContent = document.getElementById('packer-content');
+        const inspectorContent = document.getElementById('inspector-content');
+
+        packerTabBtn.addEventListener('click', () => {
+            packerTabBtn.classList.add('active');
+            inspectorTabBtn.classList.remove('active');
+            packerContent.classList.remove('hidden');
+            inspectorContent.classList.add('hidden');
+        });
+
+        inspectorTabBtn.addEventListener('click', () => {
+            inspectorTabBtn.classList.add('active');
+            packerTabBtn.classList.remove('active');
+            inspectorContent.classList.remove('hidden');
+            packerContent.classList.add('hidden');
+        });
+
+        // Chart.js functionality
+        const ctx = document.getElementById('errorRateChart').getContext('2d');
+        const errorRateChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['ピッキングエラー', '数量間違い', '商品見落とし', '伝票貼り間違え'],
+                datasets: [{
+                    label: '導入前（エラー件数/月）',
+                    data: [12, 8, 5, 3],
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)', // red-500
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'ShipPilot導入後（エラー件数/月）',
+                    data: [1, 1, 0, 0],
+                    backgroundColor: 'rgba(34, 197, 94, 0.6)', // green-500
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '月間エラー発生件数'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + '件';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+    </script>
+</body>
+</html>
