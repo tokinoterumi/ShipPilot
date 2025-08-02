@@ -1,7 +1,7 @@
 ```mermaid
 ---
 config:
-  layout: dagre
+  layout: fixed
   look: handDrawn
 ---
 flowchart TB
@@ -48,23 +48,29 @@ flowchart TB
   end
  subgraph ExceptionHandling["🚨 例外処理<br>Exception Handling"]
     direction TB
-        T["Exception解決処理<br>Exception Resolution"]
+        T["Exception処理<br>Exception Resolution"]
         U["タスクプールに戻す<br>Return to Pending"]
         note1["📝 詳細記録<br>Detailed Logging<br>・担当者 / Operator<br>・理由 / Reason<br>・時刻 / Timestamp<br>・操作履歴 / Action History"]
   end
     A --> B
-    B --> C & PE1 & PC1
-    C --> D & PE1 & PC1
+    B --> C
+    B --x PE1 & PC1
+    C --> D
+    C --x PC1 & PE1
     D --> F
-    F --> F1 & PE1 & PC1
+    F --> F1
+    F --x PC1 & PE1
     F1 --> F2
     WH1 --> WH2
     H --> I
-    I --> J & IC1
+    I --> J
+    I --x IC1
     J -- ✅ 合格 / Pass --> SL
-    SL --> K & IC1
+    SL --> K
+    SL --x IC1
     J -- ❌ 修正必要<br>Needs Correction --> L
-    L --> M & IC1
+    L --> M
+    L --x IC1
     M -- ピッキングエラー<br>Picking Error --> N
     M -- 梱包エラー<br>Packing Error --> O_decision
     O_decision -- あり / Yes --> O_void
@@ -82,13 +88,13 @@ flowchart TB
     U --> B
     F2 --> WH1
     WH2 --> G
-    G --> H & PC1
-    F2 -.-> V["🔓 Packer 次の作業へ<br>Packer Free to Start Next Task"]
+    G --> H
+    G -.-> V["🔓 Packer 次の作業へ<br>Packer Free to Start Next Task"]
     PE1 --> E3
     PE1 -.-> V
     PC1 --> Cancelled["Cancelled"]
     PC1 -.-> V
-    IC1 --> Cancelled
+    IC1 ---> Cancelled
     IC1 -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"]
      B:::pending
      C:::process
