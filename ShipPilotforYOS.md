@@ -1,3 +1,4 @@
+```mermaid
 ---
 config:
   layout: dagre
@@ -136,3 +137,4 @@ flowchart TB
     classDef cancelled fill:#e9ecef,stroke:#6c757d,stroke-width:2px
     classDef note fill:#e6f3ff,stroke:#0066cc,stroke-width:1px,stroke-dasharray: 3 3
     style WebhookSystem stroke:none,fill:transparent
+```
