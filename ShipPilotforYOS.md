@@ -92,7 +92,7 @@ flowchart TB
     G -.-> V["🔓 Packer 次の作業へ<br>Packer Free to Start Next Task"]
     PE1 --> E3
     PE1 -.-> V
-    PC1 --> Cancelled["Cancelled"]
+    PC1 --> Cancelled(["Cancelled"])
     PC1 -.-> V
     IC1 ---> Cancelled
     IC1 -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"]
@@ -143,4 +143,5 @@ flowchart TB
     classDef cancelled fill:#e9ecef,stroke:#6c757d,stroke-width:2px
     classDef note fill:#e6f3ff,stroke:#0066cc,stroke-width:1px,stroke-dasharray: 3 3
     style WebhookSystem stroke:none,fill:transparent
+
 ```
