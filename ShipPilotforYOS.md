@@ -84,6 +84,7 @@ flowchart TB
     M -- 修正不可<br>Unfixable --> E3
     E3 --> note1
     note1 --> T
+    note1 -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"]
     T --> U
     U --> B
     F2 --> WH1
@@ -95,7 +96,7 @@ flowchart TB
     PC1 --> Cancelled(["Cancelled"])
     PC1 -.-> V
     IC1 ---> Cancelled
-    IC1 -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"]
+    IC1 -.-> V3
      B:::pending
      C:::process
      D:::picked
@@ -126,9 +127,9 @@ flowchart TB
      T:::process
      U:::pending
      note1:::note
+     V3:::unlock
      V:::unlock
      Cancelled:::cancelled
-     V3:::unlock
     classDef pending fill:#fff2cc,stroke:#d6b656,stroke-width:2px
     classDef picked fill:#d5e8d4,stroke:#82b666,stroke-width:2px
     classDef packed fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px
