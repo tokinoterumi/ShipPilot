@@ -20,8 +20,8 @@ flowchart TB
   end
  subgraph WebhookSystem[" "]
     direction TB
-        WH2["タスク状態を自動更新<br>Updates Task Status"]
-        WH1["Webhook取得運単番号<br>Webhook Gets Tracking Number"]
+        WH2["タスク状態自動更新<br>Updates Task Status"]
+        WH1["送り状番号自動取得<br>Webhook Gets Tracking Number"]
   end
  subgraph CorrectionLoop["修正ループ / Correction Loop"]
     direction LR
