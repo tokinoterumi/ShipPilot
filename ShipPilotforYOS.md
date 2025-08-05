@@ -15,7 +15,7 @@ flowchart TB
         F["梱包開始<br>Start Packing"]
         F1["寸法と重量を入力<br>Enter Dimensions &amp; Weight"]
         F2["PlusShipping/B2で伝票発行<br>Create Label"]
-        PE1["🚨 例外報告<br>Report Exception"]
+        PE1["例外状態<br>Exception"]
   end
  subgraph WebhookSystem[" "]
     direction TB
