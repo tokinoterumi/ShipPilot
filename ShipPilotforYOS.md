@@ -12,7 +12,7 @@ flowchart TB
         B["ピッキング待ち<br>Pending"]
         C["ピッキング中<br>Picking"]
         D[/"ピッキング完了<br>Picked"/]
-        F["梱包開始<br>Start Packing"]
+        F["梱包開始<br>Packing"]
         F1["寸法と重量を入力<br>Enter Dimensions &amp; Weight"]
         F2["PlusShipping/B2で伝票発行<br>Create Label"]
         PE1["例外状態<br>Exception"]
@@ -56,7 +56,6 @@ flowchart TB
     A -- Cancelled --> A2
     A2 --> Cancelled(["❌ キャンセル<br>Cancelled"])
     Cancelled -.-> V3["🔓 Inspector 次の作業へ<br>Inspector Free to Process Next Task"] & V["🔓 Packer 次の作業へ<br>Packer Free to Start Next Task"]
-    B --x PE1
     C --> D
     C --x PE1
     D --> F
@@ -141,4 +140,5 @@ flowchart TB
     classDef note fill:#e6f3ff,stroke:#0066cc,stroke-width:1px,stroke-dasharray: 3 3
     classDef shopify fill:#96f2d7,stroke:#00b894,stroke-width:2px
     style WebhookSystem stroke:none,fill:transparent
+
 ```
